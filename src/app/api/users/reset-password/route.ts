@@ -1,6 +1,6 @@
 //for reset password post request
 
-import User from "@/models/userModal";
+import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from 'bcryptjs';
 

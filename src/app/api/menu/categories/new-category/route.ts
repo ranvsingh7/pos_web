@@ -1,5 +1,5 @@
 import {connect} from "@/dbConfig/dbConfig";
-import Category from "@/models/menuCategoryModal";
+import Category from "@/models/menuCategoryModel";
 import { NextRequest, NextResponse } from "next/server";
 import { decodeJWT } from "@/helpers/getDecodedTokenData";
 
@@ -14,6 +14,10 @@ export async function POST(req: NextRequest) {
         const {categoryName, description } = reqBody;
         const decoded = decodeJWT(token);
         const userId = decoded?.payload?.id;
+
+        if(!userId){
+            return NextResponse.json({error: "Unauthorized"}, {status: 401});
+        }
 
         // check if tableNo and tableName already with the userId
         const categoryNameAlready = await Category.findOne({categoryName: categoryName, userId: userId});
