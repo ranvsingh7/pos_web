@@ -72,8 +72,17 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/tables/new-table", table);
-      getTableData();
-    } catch (error) {}
+      const newData = [...tables, res.data.savedTable];
+      const sortedTables = newData.sort(
+        (a: { tableNo: number }, b: { tableNo: number }) =>
+          a.tableNo - b.tableNo
+      );
+      setTables(sortedTables);
+      toast.success("Table created successfully");
+    } catch (error: any) {
+      const errormsg = error.response.data.error;
+      toast.error(errormsg);
+    }
   };
 
   const handleUpdateTable = async (
@@ -82,14 +91,26 @@ const Dashboard = () => {
     orderValue: number
   ) => {
     try {
-      setUpdatingTable(true);
+      // setUpdatingTable(true);
       const res = await axios.put("/api/tables/edit-table", {
         id: id,
         isVacant: isVacant,
         orderValue: orderValue,
       });
-      getTableData();
-      setUpdatingTable(false);
+      res.status === 200 &&
+        setTables(
+          tables.map((table) => {
+            if (table._id === id) {
+              return {
+                ...table,
+                isVacant: isVacant,
+                orderValue: orderValue,
+              };
+            }
+            return table;
+          })
+        );
+      // setUpdatingTable(false);
       console.log(res);
     } catch (error) {}
   };
@@ -99,7 +120,8 @@ const Dashboard = () => {
       const res = await axios.delete("/api/tables/delete-table", {
         data: { id: id },
       });
-      getTableData();
+      res.status === 200 &&
+        setTables(tables.filter((table) => table._id !== id));
       toast.success("Table deleted successfully");
     } catch (error) {
       toast.error("Table has orders or is not vacant");

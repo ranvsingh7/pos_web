@@ -1,6 +1,6 @@
 import {connect} from "@/dbConfig/dbConfig";
 import { decodeJWT } from "@/helpers/getDecodedTokenData";
-import Table from "@/models/tableModel";
+import Categories from "@/models/menuCategoryModel";
 import { NextRequest, NextResponse } from "next/server";
 
 connect()
@@ -10,10 +10,14 @@ export async function GET(req: NextRequest) {
     const decoded = decodeJWT(token);
     const userId = decoded?.payload?.id;
 
+    if(!userId){
+        return NextResponse.json({error: "Unauthorized"}, {status: 401});
+    }
+
     try {
-        const tables = await Table.find({userId: userId});
+        const categories = await Categories.find({userId: userId});
         // console.log("🚀 ~ GET ~ tables:", tables)
-        return NextResponse.json(tables);
+        return NextResponse.json(categories);
     } catch (error:any) {
         return NextResponse.json({error: error.message}, {status: 500});
     }

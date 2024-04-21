@@ -1,6 +1,6 @@
 import { decodeJWT } from "@/helpers/getDecodedTokenData";
 import { NextRequest, NextResponse } from "next/server";
-import Table from "@/models/tableModal";
+import Table from "@/models/tableModel";
 
 
 export async function PUT(req: NextRequest) {

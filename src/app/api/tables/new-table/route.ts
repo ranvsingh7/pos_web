@@ -1,5 +1,5 @@
 import {connect} from "@/dbConfig/dbConfig";
-import Table from "@/models/tableModal";
+import Table from "@/models/tableModel";
 import { NextRequest, NextResponse } from "next/server";
 import { decodeJWT } from "@/helpers/getDecodedTokenData";
 
